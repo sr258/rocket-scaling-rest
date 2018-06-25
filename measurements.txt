@@ -1,0 +1,15 @@
+
+
+RC 1 instance; concurrency 100
+adding 10000 users took 965941.4931689985 ms. That's 96.59414931689984 ms/user. (baseline)
+
+RC Cluster 8 instances; concurrency 100
+adding 10000 users took 210177.25351499952 ms. That's 21.01772535149995 ms/user. (4.5x speedup)
+
+RC Cluster 8 instances; concurrency 8
+adding 10000 users took 513774.69919800013 ms. That's 51.37746991980001 ms/user.
+
+Beobachtung:
+Die Zeit Erstellung / user nimmt mit größerer Nutzerdatenzahl deutlich ab!
+Anlegen von 1000 Nutzern bei 65000 vorhandenen Usern (RC Cluster 8 instances; concurrency 100)
+adding 1000 users took 117327.5044700019 ms. That's 117.32750447000191 ms/user.

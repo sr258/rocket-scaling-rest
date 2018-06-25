@@ -3,7 +3,6 @@ var common = require('./common');
 var PromisePool = require('es6-promise-pool')
 const { performance } = require('perf_hooks');
 
-
 var currentNr = 0;
 var globalClient;
 var stopNr;
