@@ -3,7 +3,6 @@ var common = require('./common');
 var PromisePool = require('es6-promise-pool')
 const { performance } = require('perf_hooks');
 
-
 var currentNr = 0;
 var globalClient;
 var stopNr;
@@ -11,8 +10,7 @@ var stopNr;
 var promiseProducer = function () {
   if (currentNr < stopNr) {
     currentNr++;
-    console.log("Creating promise for " + "username" + currentNr + " stopping @ " + stopNr);
-    return common.createUser(globalClient, "username" + currentNr);
+    return common.createUser(globalClient, currentNr);
   }
   else {
     return null;
@@ -25,10 +23,13 @@ async function addUsers(url, username, password, port, start, nr, concurrencyLev
   let client = await common.login(url, username, password, port);
 
   globalClient = client;
-  currentNr = start;
+  currentNr = start - 1;
   stopNr = start + nr;
 
   var pool = new PromisePool(promiseProducer, concurrencyLevel)
+  pool.addEventListener('fulfilled', function (event) {
+    console.log(event.data.result.nr + ";" + Math.round(event.data.result.start) + ";" + Math.round(event.data.result.end) + ";" + Math.round(event.data.result.end - event.data.result.start));
+  });
   var poolPromise = pool.start();
   poolPromise.then(function () {
     console.log("all done!");

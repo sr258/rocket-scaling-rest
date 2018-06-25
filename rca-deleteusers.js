@@ -14,7 +14,7 @@ var promiseProducer = function () {
     console.log("Creating promise for " + "username" + currentNr + " stopping @ " + stopNr);
     return new Promise(async (resolve, reject) => {
       try {
-        let un = "username" + currentNr;
+        let un = "user" + currentNr;
         let userId = await common.getUserId(globalClient, un)
         var ret = await common.deleteUser(globalClient, userId);
         resolve(ret);

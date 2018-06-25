@@ -1,6 +1,9 @@
 var RocketChatClient = require('rocketchat').RocketChatClient;
+const { performance } = require('perf_hooks');
 
-async function createUser(client, userName) {
+async function createUser(client, nr) {
+  let startTime = performance.now();
+  var userName = "user" + nr;
   var userToAdd = {
     "name": userName,
     "email": userName + "@example.com",
@@ -16,8 +19,10 @@ async function createUser(client, userName) {
     client.users.create(userToAdd, function (err, body) {
       if (err)
         reject();
-      else
-        resolve(body);
+      else {
+        let endTime = performance.now();
+        resolve({ nr: nr, start: startTime, end: endTime });
+      }
     });
   });
 }
@@ -35,7 +40,7 @@ async function deleteUser(client, id) {
 
 async function getUserId(client, username) {
   return new Promise(function (resolve, reject) {
-    client.users.info({username: username}, function (err, body) {
+    client.users.info({ username: username }, function (err, body) {
       if (err)
         reject();
       else
