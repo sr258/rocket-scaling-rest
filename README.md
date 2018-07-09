@@ -43,7 +43,7 @@ Tests
 | Gesamtnutzerzahl              | response time Read (Suche bei 2,4,8,16,... Gesamtnutzern, Position über vorhandenen Datensatz verteilt)                               |                                      |
 | globale Nachrichtenzahl       | response / download time beim Raum öffnen                          |                                      |
 | globale Nachrichtenzahl       | response time beim Verschicken einer Nachricht (1:1, Gruppe)       |                                      |
-| Nachrichtenzahl in Raum       | response / download time beim Raum öffnen                          |                                      |
+| Nachrichtenzahl in Raum       | response / download time beim Raum öffnen                          | erledigt                             |
 | Nachrichtenzahl in Raum       | response time beim Verschicken einer Nachricht (1:1, Gruppe)       | erledigt                             |
 | Anzahl hochgeladener Medien   | Upload-Zeit neuer Medien                                           |                                      |
 | Anzahl hochgeladener Medien   | Download-Zeit von ...?                                             |                                      |
@@ -76,12 +76,20 @@ _Hinweis: falsche Darstellung des Einbruchs am Ende des Graphen durch Glättungs
 
 Nachrichtenzahl in Raum -> response time beim Verschicken einer Nachricht (Gruppe) 
 ----------------------------------------------------------------------------------
-![100,000 Nutzer erstellen, 64 Anfragen gleichzeitig](measurements/1inst_100000messages_conc64_graph.png "Graph")
+![100,000 Nachrichten schicken, 64 Anfragen gleichzeitig](measurements/1inst_100000messages_conc64_graph.png "Graph")
 _Hinweis: falsche Darstellung des Einbruchs am Ende des Graphen durch Glättungsfunktion_
-- relevante Messzahlen: measurements/1inst_100000messages_conc64.txt
+- relevante Messzahlen: measurements/1inst_100000messages_conc64_2.txt
 - Test-Szenario: 100,000 Nachrichten in Raum mit 32 + 1 (= Admin) Nutzern erstellen, 64 Anfragen gleichzeitig
 - Test-Setup: Virtuelle Maschine i7-6700k, 4 physische Kerne, 8 logische, 8 GB RAM, 1 Rocket-Instanz + 1 MongoDB-Node in Replica Set
 - Auswertung: 
   - Die Last liegt konstant zu ca. 80% bei Node.
   - Die Anzahl der in der Raumübersicht angezeigten Nachrichten hängt eine gewisse Zeit __erheblich__ hinter tatsächlich abgesendeten hinterher. Dann plötzlich Aufholen auf 100,000!?
-  - Auswertung: in etwa Konstante Skalierung (O(1))
+  - Auswertung: in etwa konstante Skalierung (O(1))
+
+Nachrichtenzahl in Raum -> response / download time beim Raum öffnen (Gruppe) 
+----------------------------------------------------------------------------------
+![100,000 Nachrichten schicken, alle 100 Nachrichten letzten 100 abfragen](measurements/1ins_100000messages_read100every100_conc64_graph.png "Graph")
+- relevante Messzahlen: measurements/1inst100000messages_read100every100_conc65.txt
+- Test-Szenario: 100,000 Nachrichten in Raum mit 32 + 1 (= Admin) Nutzern erstellen, 64 Anfragen gleichzeitig; alle 100 gesendete Nachrichten werden die letzten 100 Nachrichten im Chatraum abgerufen (parallel zum weiterlaufenden Versand)
+- Test-Setup: Virtuelle Maschine i7-6700k, 4 physische Kerne, 8 logische, 8 GB RAM, 1 Rocket-Instanz + 1 MongoDB-Node in Replica Set
+- Auswertung: Die response time schwankt generell relativ stark, jedoch scheint sie insgesamt konstant zu skalieren oder nur sehr schwach linear. O(1)
