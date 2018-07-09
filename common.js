@@ -60,7 +60,38 @@ async function login(url, username, password, port) {
   });
 }
 
+async function createGroup(client, groupname, users) {
+  return new Promise(function (resolve, reject) {
+    client.groups.create(groupname, users, function (err, body) {
+      if (err)
+        reject();
+      else
+        resolve(body);
+    });
+  });
+}
+
+
+async function sendMessage(client, roomid, currentNr, message) {
+  let startTime = performance.now();
+  return new Promise(function (resolve, reject) {
+    client.chat.postMessage({ roomId: roomid, text: message }, function (err, body) {
+      if (err)
+        reject();
+      else {
+        let endTime = performance.now();
+        body.nr = currentNr;
+        body.start = startTime;
+        body.end = endTime;
+        resolve(body);
+      }        
+    });
+  });
+}
+
 exports.createUser = createUser;
 exports.deleteUser = deleteUser;
 exports.login = login;
 exports.getUserId = getUserId;
+exports.createGroup = createGroup;
+exports.sendMessage = sendMessage;
