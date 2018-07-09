@@ -39,12 +39,12 @@ Tests
 
 |Einfluss von ...               | auf....                                                            |
 |-------------------------------|--------------------------------------------------------------------|
-| Gesamtnutzerzahl              | reponse time Create / Delete Nutzer                                |
+| Gesamtnutzerzahl              | response time Create / Delete Nutzer                               |
 | Gesamtnutzerzahl              | response time Read (Suche bei 2,4,8,16,... Gesamtnutzern, Position über vorhandenen Datensatz verteilt)                               |
 | globale Nachrichtenzahl       | response / download time beim Raum öffnen                          |
-| globale Nachrichtenzahl       | reponse time beim Verschicken einer Nachricht (1:1, Gruppe)        |
+| globale Nachrichtenzahl       | response time beim Verschicken einer Nachricht (1:1, Gruppe)       |
 | Nachrichtenzahl in Raum       | response / download time beim Raum öffnen                          |
-| Nachrichtenzahl in Raum       | reponse time beim Verschicken einer Nachricht (1:1, Gruppe)        |
+| Nachrichtenzahl in Raum       | response time beim Verschicken einer Nachricht (1:1, Gruppe)       |
 | Anzahl hochgeladener Medien   | Upload-Zeit neuer Medien                                           |
 | Anzahl hochgeladener Medien   | Download-Zeit von ...?                                             |
 
@@ -56,3 +56,27 @@ Variation der Umgebung
 - eigener DB-Server (extra Maschine)
 - Clustering
 - zusätzliche Mongo-Indices
+
+(vorläufige) Ergebnisse
+-----------------------
+
+Gesamtnutzerzahl -> response time Create / Delete Nutzer             
+--------------------------------------------------------
+
+- relevante Messzahlen: measurements/1inst_100000entries_conc64.txt
+- Test-Szenario: 100,000 Nutzer erstellen, 64 Anfragen gleichzeitig
+- Test-Setup: Virtuelle Maschine i7-6700k, 4 physische Kerne, 8 logische, 8 GB RAM, 1 Rocket-Instanz + 1 MongoDB-Node in Replica Set
+- Auswertung: Die Dauer, einen neuen Nutzer zu erstellen skaliert linear. Die Hauptlast (mit 'top' manuell beobachtet) liegt anfangs in Node, verschiebt sich aber relativ schnell hinzu MongoDB.
+- Konsequenz: Die Gesamtdauer, Nutzer zu erstellen ist quadratisch abhängig von der zu erstellenden Nutzerzahl. --> in großen Skalen ungünstig!
+- weiter zu bearbeitende Punkte:
+  - Optimierung der MongoDB-Instanz? (z.B. zusätzliches Indices)
+  - Überprüfung des Codes der Nutzer-Erstellung in Rocket.Chat: ungünstige in Reihe geschaltete Mehrfachabfragen der DB?
+
+Nachrichtenzahl in Raum -> response time beim Verschicken einer Nachricht (Gruppe) 
+----------------------------------------------------------------------------------
+- relevante Messzahlen: measurements/1inst_100000messages_conc64.txt
+- Test-Szenario: 100,000 Nachrichten in Raum mit 32 Usern erstellen, 64 Anfragen gleichzeitig
+- Test-Setup: Virtuelle Maschine i7-6700k, 4 physische Kerne, 8 logische, 8 GB RAM, 1 Rocket-Instanz + 1 MongoDB-Node in Replica Set
+- Auswertung: 
+  - Die Last liegt zu 80% bei Node.
+  - Die Anzahl der in der Raumübersicht angezeigten Nachrichten hängt eine gewisse Zeit __erheblich__ hinter tatsächlich abgesendeten hinterher. Dann plötzlich Aufholen auf 100,000!?

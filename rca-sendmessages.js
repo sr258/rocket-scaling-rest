@@ -58,6 +58,7 @@ async function sendMessages(url, username, password, port, nr, roomname, usersnr
     process.exit();
   }, function (error) {
     console.log("There was an error: " + error.message);
+    console.log(error);
     process.exit();
   })
 }
