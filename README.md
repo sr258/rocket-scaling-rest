@@ -62,11 +62,13 @@ Variation der Umgebung
 
 Gesamtnutzerzahl -> response time Create / Delete Nutzer             
 --------------------------------------------------------
+![100,000 Nutzer erstellen, 64 Anfragen gleichzeitig](measurements/1inst_100000entries_conc64_graph.png "Graph")
+_Hinweis: falsche Darstellung des Einbruchs am Ende des Graphen durch Glättungsfunktion_
 
 - relevante Messzahlen: measurements/1inst_100000entries_conc64.txt
 - Test-Szenario: 100,000 Nutzer erstellen, 64 Anfragen gleichzeitig
 - Test-Setup: Virtuelle Maschine i7-6700k, 4 physische Kerne, 8 logische, 8 GB RAM, 1 Rocket-Instanz + 1 MongoDB-Node in Replica Set
-- Auswertung: Die Dauer, einen neuen Nutzer zu erstellen skaliert linear. Die Hauptlast (mit 'top' manuell beobachtet) liegt anfangs in Node, verschiebt sich aber relativ schnell hinzu MongoDB.
+- Auswertung: Die Dauer, einen neuen Nutzer zu erstellen skaliert linear. (O(x)) Die Hauptlast (mit 'top' manuell beobachtet) liegt anfangs in Node, verschiebt sich aber relativ schnell hinzu MongoDB.
 - Konsequenz: Die Gesamtdauer, Nutzer zu erstellen ist quadratisch abhängig von der zu erstellenden Nutzerzahl. --> in großen Skalen ungünstig!
 - weiter zu bearbeitende Punkte:
   - Optimierung der MongoDB-Instanz? (z.B. zusätzliches Indices)
@@ -74,9 +76,12 @@ Gesamtnutzerzahl -> response time Create / Delete Nutzer
 
 Nachrichtenzahl in Raum -> response time beim Verschicken einer Nachricht (Gruppe) 
 ----------------------------------------------------------------------------------
+![100,000 Nutzer erstellen, 64 Anfragen gleichzeitig](measurements/1inst_100000messages_conc64_graph.png "Graph")
+_Hinweis: falsche Darstellung des Einbruchs am Ende des Graphen durch Glättungsfunktion_
 - relevante Messzahlen: measurements/1inst_100000messages_conc64.txt
-- Test-Szenario: 100,000 Nachrichten in Raum mit 32 Usern erstellen, 64 Anfragen gleichzeitig
+- Test-Szenario: 100,000 Nachrichten in Raum mit 32 + 1 (= Admin) Nutzern erstellen, 64 Anfragen gleichzeitig
 - Test-Setup: Virtuelle Maschine i7-6700k, 4 physische Kerne, 8 logische, 8 GB RAM, 1 Rocket-Instanz + 1 MongoDB-Node in Replica Set
 - Auswertung: 
-  - Die Last liegt zu 80% bei Node.
+  - Die Last liegt konstant zu ca. 80% bei Node.
   - Die Anzahl der in der Raumübersicht angezeigten Nachrichten hängt eine gewisse Zeit __erheblich__ hinter tatsächlich abgesendeten hinterher. Dann plötzlich Aufholen auf 100,000!?
+  - Auswertung: in etwa Konstante Skalierung (O(1))
