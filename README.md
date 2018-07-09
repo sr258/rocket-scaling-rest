@@ -40,7 +40,7 @@ Tests
 |Einfluss von ...               | auf....                                                            |                                      |
 |-------------------------------|--------------------------------------------------------------------|--------------------------------------|
 | Gesamtnutzerzahl              | response time Create / Delete Nutzer                               | erledigt                             |
-| Gesamtnutzerzahl              | response time Read (Suche bei 2,4,8,16,... Gesamtnutzern, Position über vorhandenen Datensatz verteilt)                               |                                      |
+| Gesamtnutzerzahl              | response time Read (Suche bei 2,4,8,16,... Gesamtnutzern, Position über vorhandenen Datensatz verteilt)                               | erledigt                                 |
 | globale Nachrichtenzahl       | response / download time beim Raum öffnen                          |                                      |
 | globale Nachrichtenzahl       | response time beim Verschicken einer Nachricht (1:1, Gruppe)       |                                      |
 | Nachrichtenzahl in Raum       | response / download time beim Raum öffnen                          | erledigt                             |
@@ -74,10 +74,25 @@ _Hinweis: falsche Darstellung des Einbruchs am Ende des Graphen durch Glättungs
   - Optimierung der MongoDB-Instanz? (z.B. zusätzliches Indices)
   - Überprüfung des Codes der Nutzer-Erstellung in Rocket.Chat: ungünstige in Reihe geschaltete Mehrfachabfragen der DB?
 
+Gesamtnutzerzahl --> response time Nutzer auffinden                           
+---------------------------------------------------
+![100,000 Nutzer erstellen, alle 100 Nutzer 64 vorhandene Nutzer abfragen](measurements/1inst_100000users_read64every100_conc64_graph.png "Graph")
+
+_Hinweis: falsche Darstellung des Einbruchs am Ende des Graphen durch Glättungsfunktion_
+
+- relevante Messzahlen: measurements/1inst_100000users_read64every100_conc64.txt
+- Test-Szenario: erstellt 100,000 Nutzer; sucht alle 100 Nutzer nach 64 Nutzernamen (parallele Anfragen, wartet vorher auf Abschluss der Erstellung); gibt Mittelwert der Reponse-Zeit für die 64 Nutzernamen aus; die Nutzernamen sind gleichmäßig über die Datenbank verteilt
+- Test-Setup: Virtuelle Maschine i7-6700k, 4 physische Kerne, 8 logische, 8 GB RAM, 1 Rocket-Instanz + 1 MongoDB-Node in Replica Set
+- Auswertung: Die Auffindezeit eines Nutzers skaliert linear mit der Anzahl der vorhanden Nutzer O(n). In großen Skalen ungünstig aber mit ausreichend Ressourcen beherrschbar!
+- Konsequenzen: 
+  - Überprüfen, ob die Länge mit horizontaler Skalierung im vertretbaren Rahmen gehalten werden kann.
+  - Überprüfen: Optimierung der MongoDB über Indices möglich? Optimierungen des Rocket.Chat-Codes möglich?
+- zu berücksichtigen: möglicherweise wird nach Erstellung eines Nutzerblocks noch ein Index erstellt, auf dessen Vollendung nicht abgewartet wird?
+
 Nachrichtenzahl in Raum -> response time beim Verschicken einer Nachricht (Gruppe) 
 ----------------------------------------------------------------------------------
 ![100,000 Nachrichten schicken, 64 Anfragen gleichzeitig](measurements/1inst_100000messages_conc64_graph.png "Graph")
-_Hinweis: falsche Darstellung des Einbruchs am Ende des Graphen durch Glättungsfunktion_
+
 - relevante Messzahlen: measurements/1inst_100000messages_conc64_2.txt
 - Test-Szenario: 100,000 Nachrichten in Raum mit 32 + 1 (= Admin) Nutzern erstellen, 64 Anfragen gleichzeitig
 - Test-Setup: Virtuelle Maschine i7-6700k, 4 physische Kerne, 8 logische, 8 GB RAM, 1 Rocket-Instanz + 1 MongoDB-Node in Replica Set
