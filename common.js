@@ -108,6 +108,17 @@ async function getGroupHistory(client, roomid, count) {
   });
 }
 
+async function findUser(client, username) {
+  return new Promise(function (resolve, reject) {
+    client.restClient.request("GET", "users.list", { query: { name: { "eq": username } } }, function (err, body) {
+      if (err)
+        reject();
+      else
+        resolve(body);
+    });
+  });
+}
+
 exports.createUser = createUser;
 exports.deleteUser = deleteUser;
 exports.login = login;
@@ -115,3 +126,4 @@ exports.getUserId = getUserId;
 exports.createGroup = createGroup;
 exports.sendMessage = sendMessage;
 exports.getGroupHistory = getGroupHistory;
+exports.findUser = findUser;
