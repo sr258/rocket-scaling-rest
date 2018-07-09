@@ -109,12 +109,21 @@ async function getGroupHistory(client, roomid, count) {
 }
 
 async function findUser(client, username) {
-  return new Promise(function (resolve, reject) {
-    client.restClient.request("GET", "users.list", { query: { name: { "eq": username } } }, function (err, body) {
-      if (err)
+  let startTime = performance.now();
+  return new Promise(function (resolve, reject) {    
+    client.restClient.request("GET", "users.list?query={\"name\":{\"$eq\":\"" + username + "\"}}", {}, function (err, body) {
+      if (err) {
+        console.log(err);
+        console.log(body);
         reject();
-      else
+      }
+      else {
+        let endTime = performance.now();
+        body.username = username;
+        body.start = startTime;
+        body.end = endTime;
         resolve(body);
+      }
     });
   });
 }

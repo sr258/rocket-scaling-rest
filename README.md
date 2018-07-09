@@ -1,7 +1,7 @@
 Rocket.Chat Skalierungs-Tests
 =============================
 
-Dieses Projekt misst, wie der Rocket.Chat-Server bei großen Datenbeständen skaliert. Die Messung der Effekte von vielen parallelen Nutzern ist in einem anderen Projekt beheimatet.
+Dieses Projekt misst, wie der Rocket.Chat-Server bei großen Datenbeständen skaliert. Die Messung der Effekte von vielen parallelen Nutzern ist in einem anderen Projekt beheimatet. Es setzt auf einer NodeJS-Client-Bibliothek für RocketChat auf, die leider nicht ganz den aktuellen Stand der API umsetzt. (https://www.npmjs.com/package/rocketchat)
 
 Grundsätzlich untersuchte Faktoren
 ----------------------------------
