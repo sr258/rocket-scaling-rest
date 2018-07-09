@@ -21,8 +21,8 @@ Erkenntnisziele
 - Wirkt sich in insgesamt großer Datenbestand auch auf Reaktionszeiten von lokal begrenzter Nutzerinteraktion aus? (insgesamt viele Nachrichten in Datenbank --> Versenden in kleiner Gruppe)
 - Führt die vorhandene natürliche Partitionierung der Nutzer in unserem Einsatzszenario zu einer Verbesserung der Performanz im Vergleich zu einer zufälligen Verteilung der Nutzer auf Gruppen?
  
-Untersuchte Aktionen
---------------------
+Zu untersuchende Aktionen
+-------------------------
 
 *(alle über API)*
 
@@ -37,16 +37,16 @@ Tests
 -----
 
 
-|Einfluss von ...               | auf....                                                            |
-|-------------------------------|--------------------------------------------------------------------|
-| Gesamtnutzerzahl              | response time Create / Delete Nutzer                               |
-| Gesamtnutzerzahl              | response time Read (Suche bei 2,4,8,16,... Gesamtnutzern, Position über vorhandenen Datensatz verteilt)                               |
-| globale Nachrichtenzahl       | response / download time beim Raum öffnen                          |
-| globale Nachrichtenzahl       | response time beim Verschicken einer Nachricht (1:1, Gruppe)       |
-| Nachrichtenzahl in Raum       | response / download time beim Raum öffnen                          |
-| Nachrichtenzahl in Raum       | response time beim Verschicken einer Nachricht (1:1, Gruppe)       |
-| Anzahl hochgeladener Medien   | Upload-Zeit neuer Medien                                           |
-| Anzahl hochgeladener Medien   | Download-Zeit von ...?                                             |
+|Einfluss von ...               | auf....                                                            |                                      |
+|-------------------------------|--------------------------------------------------------------------|--------------------------------------|
+| Gesamtnutzerzahl              | response time Create / Delete Nutzer                               | erledigt                             |
+| Gesamtnutzerzahl              | response time Read (Suche bei 2,4,8,16,... Gesamtnutzern, Position über vorhandenen Datensatz verteilt)                               |                                      |
+| globale Nachrichtenzahl       | response / download time beim Raum öffnen                          |                                      |
+| globale Nachrichtenzahl       | response time beim Verschicken einer Nachricht (1:1, Gruppe)       |                                      |
+| Nachrichtenzahl in Raum       | response / download time beim Raum öffnen                          |                                      |
+| Nachrichtenzahl in Raum       | response time beim Verschicken einer Nachricht (1:1, Gruppe)       | erledigt                             |
+| Anzahl hochgeladener Medien   | Upload-Zeit neuer Medien                                           |                                      |
+| Anzahl hochgeladener Medien   | Download-Zeit von ...?                                             |                                      |
 
 Variation der Umgebung
 ----------------------

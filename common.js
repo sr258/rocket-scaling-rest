@@ -84,7 +84,26 @@ async function sendMessage(client, roomid, currentNr, message) {
         body.start = startTime;
         body.end = endTime;
         resolve(body);
-      }        
+      }
+    });
+  });
+}
+
+async function getGroupHistory(client, roomid, count) {
+  let startTime = performance.now();
+  return new Promise(function (resolve, reject) {
+    client.groups.history({}, { roomId: roomid, count: count }, function (err, body) {
+      if (err) {
+        console.log(err);
+        console.log(body);
+        reject();
+      }
+      else {
+        let endTime = performance.now();
+        body.start = startTime;
+        body.end = endTime;
+        resolve(body);
+      }
     });
   });
 }
@@ -95,3 +114,4 @@ exports.login = login;
 exports.getUserId = getUserId;
 exports.createGroup = createGroup;
 exports.sendMessage = sendMessage;
+exports.getGroupHistory = getGroupHistory;
